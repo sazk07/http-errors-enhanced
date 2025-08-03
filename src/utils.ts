@@ -1,52 +1,53 @@
-export type GenericObject = Record<string, any>
+export type GenericObject = Record<string, any>;
 
-export type NodeError = NodeJS.ErrnoException
+export type NodeError = NodeJS.ErrnoException;
 
-const processRoot = process.cwd()
+const processRoot = process.cwd();
 
-export function pascalCase(original: string): string {
-  const rest = original
-    .slice(1)
-    .toLowerCase()
-    .replaceAll(/(\s+[a-z])/g, (_, char) => char.toUpperCase().trim())
+export const toPascalCase = (original: string): string => {
+  return original
+    .split(/[\s_-]+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join("");
+};
 
-  return original.slice(0, 1).toUpperCase() + rest
-}
+export const toUpperFirst = (original: string): string => {
+  return original.charAt(0).toUpperCase() + original.slice(1);
+};
 
-export function upperFirst(original: string): string {
-  return original.slice(0, 1).toUpperCase() + original.slice(1)
-}
+export const toLowerFirst = (original: string): string => {
+  return original.charAt(0).toLowerCase() + original.slice(1);
+};
 
-export function lowerFirst(original: string): string {
-  return original.slice(0, 1).toLowerCase() + original.slice(1)
-}
+export const addAdditionalProperties = (
+  target: GenericObject,
+  source: GenericObject,
+): void => {
+  const keyValArr = Object.entries(source);
+  const missingKeysArr = keyValArr.filter(([key]) => !(key in target));
+  const notInTarget = Object.fromEntries(missingKeysArr);
+  Object.assign(target, notInTarget);
+};
 
-export function addAdditionalProperties(target: GenericObject, source: GenericObject): void {
-  for (const v in source) {
-    if (v in target) {
-      // Do not allow any overwriting here
-      continue
-    }
-
-    target[v] = source[v]
-  }
-}
-
-export function serializeError(error: Error, omitStack: boolean = false): GenericObject {
-  const tag = (error as NodeError).code ?? error.name ?? 'Error'
-
+export const serializeError = (
+  error: Error,
+  omitStack: boolean = false,
+): GenericObject => {
+  const tag = (error as NodeError).code ?? error.name ?? "Error";
   const serialized: GenericObject = {
-    message: `[${tag}] ${error.message}`
-  }
-
+    message: `[${tag}] ${error.message}`,
+  };
   if (!omitStack) {
-    serialized.stack = (error.stack ?? '')
-      .split('\n')
+    serialized["stack"] = (error.stack ?? "")
+      .split("\n")
       .slice(1)
-      .map(s => s.trim().replace(/^at /, '').replace(processRoot, '$ROOT'))
+      .map((line) =>
+        line
+          .trim()
+          .replace(/^at\s+/, "")
+          .replace(processRoot, "$ROOT"),
+      );
   }
-
-  addAdditionalProperties(serialized, error)
-
-  return serialized
-}
+  addAdditionalProperties(serialized, error);
+  return serialized;
+};

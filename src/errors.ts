@@ -1,39 +1,39 @@
-import { HttpError } from './base.js'
-import { type GenericObject } from './utils.js'
+import { HttpError } from "./base.js";
+import { type GenericObject } from "./utils.js";
 
 export class BadRequestError extends HttpError {
-  static status: number = 400
-  static error: string = 'BadRequest'
-  static message: string = 'Bad Request'
-  static phrase: string = 'Bad request.'
+  static status: number = 400;
+  static error: string = "BadRequest";
+  static message: string = "Bad Request";
+  static phrase: string = "Bad request.";
 
   constructor(message?: string | GenericObject, properties?: GenericObject) {
-    super(400, message, properties)
-    this.name = 'BadRequestError'
+    super(400, message, properties);
+    this.name = "BadRequestError";
   }
 }
 
 export class UnauthorizedError extends HttpError {
-  static status: number = 401
-  static error: string = 'Unauthorized'
-  static message: string = 'Unauthorized'
-  static phrase: string = 'Unauthorized.'
+  static status: number = 401;
+  static error: string = "Unauthorized";
+  static message: string = "Unauthorized";
+  static phrase: string = "Unauthorized.";
 
   constructor(message?: string | GenericObject, properties?: GenericObject) {
-    super(401, message, properties)
-    this.name = 'UnauthorizedError'
+    super(401, message, properties);
+    this.name = "UnauthorizedError";
   }
 }
 
 export class PaymentRequiredError extends HttpError {
-  static status: number = 402
-  static error: string = 'PaymentRequired'
-  static message: string = 'Payment Required'
-  static phrase: string = 'Payment required.'
+  static status: number = 402;
+  static error: string = "PaymentRequired";
+  static message: string = "Payment Required";
+  static phrase: string = "Payment required.";
 
   constructor(message?: string | GenericObject, properties?: GenericObject) {
-    super(402, message, properties)
-    this.name = 'PaymentRequiredError'
+    super(402, message, properties);
+    this.name = "PaymentRequiredError";
   }
 }
 
