@@ -11,10 +11,6 @@ import {
   toUpperFirst,
 } from "./utils.js";
 
-/* class ErrorOptions {
-  cause?: Error;
-} */
-
 export class HttpError extends Error {
   static standardErrorPrefix: string = "HTTP_ERROR_";
   status: number;
@@ -83,7 +79,7 @@ export class HttpError extends Error {
       name: {
         enumerable: false,
         value: "HttpError",
-        writable: true
+        writable: true,
       },
       isClientError: {
         enumerable: false,
@@ -101,7 +97,7 @@ export class HttpError extends Error {
   }
   #resolveStatus(status: number | string): number {
     return typeof status === "string"
-      ? codesByIdentifier[toUpperFirst(status)] ?? 500
+      ? (codesByIdentifier[toUpperFirst(status)] ?? 500)
       : status;
   }
   #validateStatus(status: number): number {

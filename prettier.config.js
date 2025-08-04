@@ -1,8 +1,5 @@
 export default {
-  printWidth: 120,
-  semi: false,
-  singleQuote: true,
+  printWidth: 80,
   bracketSpacing: true,
-  trailingComma: 'none',
-  arrowParens: 'avoid'
+  trailingComma: 'es5',
 }
