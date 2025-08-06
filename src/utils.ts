@@ -4,18 +4,18 @@ export type NodeError = NodeJS.ErrnoException;
 
 const processRoot = process.cwd();
 
-export const toPascalCase = (original: string): string => {
+export const pascalCase = (original: string): string => {
   return original
     .split(/[\s_-]+/)
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join("");
 };
 
-export const toUpperFirst = (original: string): string => {
+export const upperCaseFirstChar = (original: string): string => {
   return original.charAt(0).toUpperCase() + original.slice(1);
 };
 
-export const toLowerFirst = (original: string): string => {
+export const lowerCaseFirstChar = (original: string): string => {
   return original.charAt(0).toLowerCase() + original.slice(1);
 };
 
@@ -31,7 +31,7 @@ export const addAdditionalProperties = (
 
 export const serializeError = (
   error: Error,
-  omitStack: boolean = false,
+  omitStack = false,
 ): GenericObject => {
   const tag = (error as NodeError).code ?? error.name ?? "Error";
   const serialized: GenericObject = {

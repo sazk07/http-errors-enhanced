@@ -2,9 +2,9 @@ import { deepStrictEqual, match } from "node:assert";
 import { test } from "node:test";
 import { addAdditionalProperties, serializeError } from "../src/index.js";
 import {
-  toLowerFirst,
-  toPascalCase,
-  toUpperFirst,
+  lowerCaseFirstChar,
+  pascalCase,
+  upperCaseFirstChar,
   type GenericObject,
 } from "../src/utils.js";
 
@@ -26,15 +26,15 @@ function verifySerialization(
 }
 
 test("pascalCase", () => {
-  deepStrictEqual(toPascalCase("a BcD EfG"), "ABcdEfg");
+  deepStrictEqual(pascalCase("a BcD EfG"), "ABcdEfg");
 });
 
 test("lowerFirst", () => {
-  deepStrictEqual(toLowerFirst("a BcD EfG"), "a BcD EfG");
+  deepStrictEqual(lowerCaseFirstChar("a BcD EfG"), "a BcD EfG");
 });
 
 test("upperFirst", () => {
-  deepStrictEqual(toUpperFirst("a BcD EfG"), "A BcD EfG");
+  deepStrictEqual(upperCaseFirstChar("a BcD EfG"), "A BcD EfG");
 });
 
 test("serializeError", () => {

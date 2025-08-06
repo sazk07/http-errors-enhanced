@@ -8,11 +8,11 @@ import {
   addAdditionalProperties,
   type GenericObject,
   serializeError,
-  toUpperFirst,
+  upperCaseFirstChar,
 } from "./utils.js";
 
 export class HttpError extends Error {
-  static standardErrorPrefix: string = "HTTP_ERROR_";
+  static standardErrorPrefix = "HTTP_ERROR_";
   status: number;
   statusCode: number; // This always mirrors status
   statusClass: number;
@@ -97,7 +97,7 @@ export class HttpError extends Error {
   }
   #resolveStatus(status: number | string): number {
     return typeof status === "string"
-      ? (codesByIdentifier[toUpperFirst(status)] ?? 500)
+      ? (codesByIdentifier[upperCaseFirstChar(status)] ?? 500)
       : status;
   }
   #validateStatus(status: number): number {
@@ -115,8 +115,8 @@ export class HttpError extends Error {
       .toUpperCase()}`;
   }
   serialize(
-    extended: boolean = false,
-    omitStack: boolean = false,
+    extended = false,
+    omitStack = false,
   ): GenericObject {
     if (!extended) {
       return {

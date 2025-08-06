@@ -1,5 +1,5 @@
 {
-  "extends": "./configs/tsbase.json",
+  "extends": "./configs/tsbase",
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
@@ -9,10 +9,12 @@
     "outDir": "dist"
   },
   "include": [
-    "src/*.ts"
+    "src/*.ts",
+    "eslint.config.mjs"
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "test"
   ]
 }
