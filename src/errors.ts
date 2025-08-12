@@ -26,10 +26,10 @@ export class UnauthorizedError extends HttpError {
 }
 
 export class PaymentRequiredError extends HttpError {
-  static status= 402;
-  static error= "PaymentRequired";
-  static message= "Payment Required";
-  static phrase= "Payment required.";
+  static status = 402;
+  static error = "PaymentRequired";
+  static message = "Payment Required";
+  static phrase = "Payment required.";
 
   constructor(message?: string | GenericObject, properties?: GenericObject) {
     super(402, message, properties);

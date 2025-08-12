@@ -1,34 +1,32 @@
 import createHttpError from "http-errors";
-import { deepStrictEqual, ok } from "node:assert";
+import { strict as assert } from "node:assert";
 import { test } from "node:test";
 import { HttpError, createError, isHttpError } from "../src/index.js";
 
-test("HttpError", async () => {
+void test("HttpError", async () => {
   await test("it should create a basic error", () => {
     const error = new HttpError(404, "WHATEVER", { key1: "value1" });
     const otherError = new HttpError(570, "WHATEVER", { key1: "value1" });
 
-    ok(error instanceof HttpError);
-    ok(error instanceof Error);
-    deepStrictEqual(error.message, "WHATEVER");
-    deepStrictEqual(error.key1, "value1");
-    deepStrictEqual(error.name, "HttpError");
-    deepStrictEqual(error.code, "HTTP_ERROR_NOT_FOUND");
-
-    ok(otherError instanceof HttpError);
-    deepStrictEqual(otherError.code, "HTTP_ERROR_570");
+    assert(error instanceof HttpError);
+    assert(error instanceof Error);
+    assert.deepStrictEqual(error.message, "WHATEVER");
+    assert.deepStrictEqual(error["key1"], "value1");
+    assert.deepStrictEqual(error.name, "HttpError");
+    assert.deepStrictEqual(error.code, "HTTP_ERROR_NOT_FOUND");
+    assert(otherError instanceof HttpError);
+    assert.deepStrictEqual(otherError.code, "HTTP_ERROR_570");
   });
 
   await test("it should support cause", () => {
     const cause = new Error("WHATEVER");
     const error = new HttpError(404, "WHATEVER", { key1: "value1", cause });
-
-    ok(error instanceof HttpError);
-    deepStrictEqual(error.message, "WHATEVER");
-    deepStrictEqual(error.key1, "value1");
-    deepStrictEqual(error.name, "HttpError");
-    deepStrictEqual(error.code, "HTTP_ERROR_NOT_FOUND");
-    deepStrictEqual(error.cause, cause);
+    assert(error instanceof HttpError);
+    assert.deepStrictEqual(error.message, "WHATEVER");
+    assert.deepStrictEqual(error["key1"], "value1");
+    assert.deepStrictEqual(error.name, "HttpError");
+    assert.deepStrictEqual(error.code, "HTTP_ERROR_NOT_FOUND");
+    assert.deepStrictEqual(error.cause, cause);
   });
 
   await test("it should assign derived properties", () => {
@@ -41,29 +39,26 @@ test("HttpError", async () => {
       headers: { c: "d" },
     });
     const otherError = new HttpError(502, "WHATEVER", { expose: true });
-
-    deepStrictEqual(clientError.status, 404);
-    deepStrictEqual(clientError.statusCode, 404);
-    deepStrictEqual(clientError.error, "Not Found");
-    deepStrictEqual(clientError.errorPhrase, "Not found.");
-    ok(clientError.isClientError);
-    ok(!clientError.isServerError);
-    deepStrictEqual(clientError.statusClass, 400);
-    ok(clientError.expose);
-    deepStrictEqual(clientError.headers, { a: "b" });
-
-    deepStrictEqual(serverError.status, 502);
-    deepStrictEqual(serverError.statusCode, 502);
-    deepStrictEqual(serverError.error, "Bad Gateway");
-    deepStrictEqual(serverError.errorPhrase, "Bad gateway.");
-    ok(!serverError.isClientError);
-    ok(serverError.isServerError);
-    deepStrictEqual(serverError.statusClass, 500);
-    ok(!serverError.expose);
-    deepStrictEqual(serverError.headers, { c: "d" });
-
-    ok(otherError.expose);
-    deepStrictEqual(otherError.headers, {});
+    assert.deepStrictEqual(clientError.status, 404);
+    assert.deepStrictEqual(clientError.statusCode, 404);
+    assert.deepStrictEqual(clientError.error, "Not Found");
+    assert.deepStrictEqual(clientError.errorPhrase, "Not found.");
+    assert(clientError.isClientError);
+    assert(!clientError.isServerError);
+    assert.deepStrictEqual(clientError.statusClass, 400);
+    assert(clientError.expose);
+    assert.deepStrictEqual(clientError.headers, { a: "b" });
+    assert.deepStrictEqual(serverError.status, 502);
+    assert.deepStrictEqual(serverError.statusCode, 502);
+    assert.deepStrictEqual(serverError.error, "Bad Gateway");
+    assert.deepStrictEqual(serverError.errorPhrase, "Bad gateway.");
+    assert(!serverError.isClientError);
+    assert(serverError.isServerError);
+    assert.deepStrictEqual(serverError.statusClass, 500);
+    assert(!serverError.expose);
+    assert.deepStrictEqual(serverError.headers, { c: "d" });
+    assert(otherError.expose);
+    assert.deepStrictEqual(otherError.headers, {});
   });
 
   await test("it should accept multiple invocations styles", () => {
@@ -72,39 +67,35 @@ test("HttpError", async () => {
       message: "WHATEVER",
       key1: "value1",
     });
-
-    deepStrictEqual(error.status, 404);
-    deepStrictEqual(error.code, "CODE");
-    deepStrictEqual(error.message, "WHATEVER");
-    deepStrictEqual(error.key1, "value1");
+    assert.deepStrictEqual(error.status, 404);
+    assert.deepStrictEqual(error.code, "CODE");
+    assert.deepStrictEqual(error.message, "WHATEVER");
+    assert.deepStrictEqual(error["key1"], "value1");
   });
 
   await test("it constrain number and expose to the expected format", () => {
-    deepStrictEqual(new HttpError(200).status, 500);
-    deepStrictEqual(new HttpError(800).status, 500);
-    deepStrictEqual(new HttpError("OTHER").status, 500);
-    ok(!new HttpError(200, { expose: "NO" }).expose);
+    assert.deepStrictEqual(new HttpError(200).status, 500);
+    assert.deepStrictEqual(new HttpError(800).status, 500);
+    assert.deepStrictEqual(new HttpError("OTHER").status, 500);
+    assert(!new HttpError(200, { expose: "NO" }).expose);
   });
 
   await test(".serialize should correctly serialize the error", () => {
     const error = new HttpError(404, "WHATEVER", { key1: "value1" });
     error.stack = "1\n2";
-
-    deepStrictEqual(error.serialize(), {
+    assert.deepStrictEqual(error.serialize(), {
       statusCode: 404,
       error: "Not Found",
       message: "WHATEVER",
     });
-
-    deepStrictEqual(error.serialize(true), {
+    assert.deepStrictEqual(error.serialize(true), {
       statusCode: 404,
       error: "Not Found",
       message: "WHATEVER",
       key1: "value1",
       stack: ["2"],
     });
-
-    deepStrictEqual(error.serialize(true, true), {
+    assert.deepStrictEqual(error.serialize(true, true), {
       statusCode: 404,
       error: "Not Found",
       message: "WHATEVER",
@@ -113,35 +104,36 @@ test("HttpError", async () => {
   });
 });
 
-test("createError", async () => {
+void test("createError", async () => {
   await test("it should create an error", () => {
     const error = createError(404, "WHATEVER", { key1: "value1" });
     const otherError = createError(404, "WHATEVER", { key: "ignored" });
-
-    ok(error instanceof HttpError);
-    ok(error instanceof Error);
-    deepStrictEqual(error.message, "WHATEVER");
-    deepStrictEqual(error.key1, "value1");
-
-    ok(otherError instanceof HttpError);
-    ok(otherError instanceof Error);
-    deepStrictEqual(otherError.message, "WHATEVER");
+    assert(error instanceof HttpError);
+    assert(error instanceof Error);
+    assert.deepStrictEqual(error.message, "WHATEVER");
+    assert.deepStrictEqual(error["key1"], "value1");
+    assert(otherError instanceof HttpError);
+    assert(otherError instanceof Error);
+    assert.deepStrictEqual(otherError.message, "WHATEVER");
   });
 });
 
-test("isHttpError", async () => {
+void test("isHttpError", async () => {
   await test("it should correctly detect HTTP error duck typing", () => {
-    ok(isHttpError(createError(404, "WHATEVER", { key1: "value1" })));
-    ok(isHttpError(createHttpError(404, "WHATEVER", { key1: "value1" })));
-    ok(isHttpError(new createHttpError.NotFound("WHATEVER")));
-    ok(isHttpError({ status: 404, statusCode: 404, expose: true }));
-
-    ok(!isHttpError(null));
-    ok(!isHttpError(undefined));
-    ok(!isHttpError("MESSAGE"));
-    ok(!isHttpError(123));
-    ok(!isHttpError({}));
-    ok(!isHttpError({ status: 404, statusCode: 405, expose: true }));
-    ok(!isHttpError({ status: 404, statusCode: 404, expose: "WHATEVER" }));
+    assert(isHttpError(createError(404, "WHATEVER", { key1: "value1" })));
+    assert(
+      isHttpError(createHttpError(404, "WHATEVER", { key1: "value1" })),
+    );
+    assert(isHttpError(new createHttpError.NotFound("WHATEVER")));
+    assert(isHttpError({ status: 404, statusCode: 404, expose: true }));
+    assert(!isHttpError(null));
+    assert(!isHttpError(undefined));
+    assert(!isHttpError("MESSAGE"));
+    assert(!isHttpError(123));
+    assert(!isHttpError({}));
+    assert(!isHttpError({ status: 404, statusCode: 405, expose: true }));
+    assert(
+      !isHttpError({ status: 404, statusCode: 404, expose: "WHATEVER" }),
+    );
   });
 });

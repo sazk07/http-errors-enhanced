@@ -1,4 +1,4 @@
-import { deepStrictEqual, match } from "node:assert";
+import { strict as assert } from "node:assert";
 import { test } from "node:test";
 import { addAdditionalProperties, serializeError } from "../src/index.js";
 import {
@@ -12,32 +12,46 @@ function verifySerialization(
   actual: GenericObject,
   expected: GenericObject,
 ): void {
-  const actualStack: string[] = actual.stack ?? [];
-  actual.stack = undefined;
-
-  const expectedStack: RegExp[] = expected.stack ?? [];
-  expected.stack = undefined;
-
-  deepStrictEqual(actual, expected);
-
-  for (let i = 0; i < expectedStack.length; i++) {
-    match(actualStack[i], expectedStack[i]);
+  const actualStack = actual.stack as string[];
+  const expectedStack = expected.stack as RegExp[];
+  assert.deepStrictEqual(
+    Object.keys(actual).sort(),
+    Object.keys(expected).sort(),
+  );
+  for (const [k, v] of Object.entries(expected)) {
+    if (k in actual) {
+      if (k === "stack") {
+        const firstElemOfActualStack = actualStack[0] ?? "";
+        const firstElemOfExpectedStack = expectedStack[0] ?? [];
+        // compare actualStack[0] with v
+        assert(
+          firstElemOfActualStack.match(firstElemOfExpectedStack as RegExp),
+        );
+      } else {
+        assert.deepStrictEqual(actual[k as keyof typeof actual], v);
+      }
+    } else {
+      assert.fail(`Expected ${k} to be present in serialized object`);
+    }
+  }
+  for (const elem of expectedStack) {
+    assert(actualStack.find((s) => s.match(elem)));
   }
 }
 
-test("pascalCase", () => {
-  deepStrictEqual(pascalCase("a BcD EfG"), "ABcdEfg");
+void test("pascalCase", () => {
+  assert.deepStrictEqual(pascalCase("a BcD EfG"), "ABcdEfg");
 });
 
-test("lowerFirst", () => {
-  deepStrictEqual(lowerCaseFirstChar("a BcD EfG"), "a BcD EfG");
+void test("lowerFirst", () => {
+  assert.deepStrictEqual(lowerCaseFirstChar("a BcD EfG"), "a BcD EfG");
 });
 
-test("upperFirst", () => {
-  deepStrictEqual(upperCaseFirstChar("a BcD EfG"), "A BcD EfG");
+void test("upperFirst", () => {
+  assert.deepStrictEqual(upperCaseFirstChar("a BcD EfG"), "A BcD EfG");
 });
 
-test("serializeError", () => {
+void test("serializeError", () => {
   class FooError extends Error {
     constructor(message: string) {
       super(message);
@@ -54,7 +68,6 @@ test("serializeError", () => {
   addAdditionalProperties(errorWithCode, { code: "CODE", additional: 1 });
   addAdditionalProperties(errorWithName, { message: "ANOTHER-MESSAGE" });
   errorWithName.name = "NAME";
-  fooError.stack = undefined;
 
   verifySerialization(serializeError(errorWithCode), {
     code: "CODE",
@@ -95,5 +108,6 @@ test("serializeError", () => {
 
   verifySerialization(serializeError(obj as Error, false), {
     message: "[Error] MESSAGE",
+    stack: [],
   });
 });

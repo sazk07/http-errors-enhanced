@@ -10,11 +10,11 @@
   },
   "include": [
     "src/*.ts",
-    "eslint.config.mjs"
+    "eslint.config.mjs",
+    "test"
   ],
   "exclude": [
     "node_modules",
-    "dist",
-    "test"
+    "dist"
   ]
 }
