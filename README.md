@@ -221,7 +221,7 @@ For informations on how to use it in a CommonJS context, please check [this page
 
 ## Credits
 
-This project is a fork of [http-errors](https://github.com/ShogunPanda/http-errors-enhanced) with refactored code.
+This project is a fork of [http-errors-enhanced](https://github.com/ShogunPanda/http-errors-enhanced) with refactored code.
 
 ## Contributing to http-errors-enhanced
 

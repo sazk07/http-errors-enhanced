@@ -16,6 +16,9 @@
     "url": "https://github.com/sazk07/http-errors-enhanced/issues"
   },
   "author": "Shahan Arshad Khan",
+  "contributors": [
+    "Shogun shogun@cowtech.it"
+  ],
   "license": "ISC",
   "private": false,
   "files": [
