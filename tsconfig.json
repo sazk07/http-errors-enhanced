@@ -9,9 +9,7 @@
     "outDir": "dist"
   },
   "include": [
-    "src/*.ts",
-    "eslint.config.mjs",
-    "test"
+    "src/*.ts"
   ],
   "exclude": [
     "node_modules",

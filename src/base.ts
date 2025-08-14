@@ -6,10 +6,14 @@ import {
 } from "./statuses.js";
 import {
   addAdditionalProperties,
-  type GenericObject,
   serializeError,
   upperCaseFirstChar,
 } from "./utils.js";
+import {
+  type GenericObject,
+  isHeadersObject,
+  isMessageGenericObject,
+} from "./types.js";
 
 export class HttpError extends Error {
   static standardErrorPrefix = "HTTP_ERROR_";
@@ -27,14 +31,9 @@ export class HttpError extends Error {
 
   constructor(
     status: number | string,
-    message?: string | GenericObject,
+    message: string | GenericObject = "",
     properties?: GenericObject,
   ) {
-    const isMessageGenericObject = (
-      msg: typeof message,
-    ): msg is GenericObject => {
-      return typeof msg === "object" && !Array.isArray(msg);
-    };
     // Normalize arguments if message is an object
     if (isMessageGenericObject(message)) {
       properties = message;
@@ -44,14 +43,14 @@ export class HttpError extends Error {
     properties = properties ?? {};
     // Extract special properties for Error constructor
     let errorOptions: ErrorOptions;
-    if (properties instanceof Error) {
-      errorOptions = properties.cause ? { cause: properties.cause } : {};
+    const { cause } = properties;
+    if (!cause) {
+      errorOptions = {};
     } else {
-      errorOptions =
-        "cause" in properties ? { cause: properties["cause"] } : {};
+      errorOptions = { cause };
     }
     // Create the error
-    super(message ?? "", errorOptions);
+    super(message, errorOptions);
     // Resolve status when string
     const resolvedStatus = this.#resolveStatus(status);
     const validStatus = this.#validateStatus(resolvedStatus);
@@ -70,36 +69,31 @@ export class HttpError extends Error {
       this.stack = properties.stack ?? "";
       this.expose = false;
     } else {
+      const { code, headers, expose, stack } = properties;
       // properties is of type GenericObject w/o Error types
-      if (typeof properties["code"] === "string") {
-        this.code = properties["code"];
+      if (typeof code === "string") {
+        this.code = code;
       } else {
         this.code = this.#generateErrorCode(this.status);
       }
-      if (
-        properties["headers"] &&
-        typeof properties["headers"] === "object" &&
-        !Array.isArray(properties["headers"]) &&
-        !(properties["headers"] instanceof Error)
-      ) {
-        this.headers = properties["headers"];
+      if (isHeadersObject(headers)) {
+        this.headers = headers;
       } else {
         this.headers = {};
       }
-      if (typeof properties["stack"] === "string") {
-        this.stack = properties["stack"];
+      if (typeof stack === "string") {
+        this.stack = stack;
       } else {
         this.stack = "";
       }
-      // This is needed to ensure http-errors isHttpError detects duck typing correctly
-      if ("expose" in properties) {
-        if (typeof properties["expose"] === "boolean") {
-          this.expose = properties["expose"];
+      if (!expose) {
+        this.expose = this.isClientError;
+      } else {
+        if (typeof expose === "boolean") {
+          this.expose = expose;
         } else {
           this.expose = false;
         }
-      } else {
-        this.expose = this.isClientError;
       }
     }
     // Assign additional properties

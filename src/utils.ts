@@ -1,18 +1,8 @@
-// Type definitions
-export type GenericObject =
-  | Record<
-      string,
-      | string
-      | number
-      | boolean
-      | string[]
-      | Record<string, string>
-      | RegExp[]
-      | Error
-    >
-  | NodeError;
-
-type NodeError = Error | NodeJS.ErrnoException;
+import {
+  type ComboError,
+  type GenericObject,
+  isNodeError,
+} from "./types.js";
 
 // Constants
 const PROCESS_ROOT = process.cwd();
@@ -57,28 +47,52 @@ export const addAdditionalProperties = (
   Object.assign(target, missingProperties);
 };
 
+// Error handling utilities
+const getErrorTag = (error: GenericObject): string => {
+  if (isNodeError(error) && error.code) {
+    return error.code;
+  }
+  return error instanceof Error ? error.name : "Error";
+};
+const getErrorMessage = (error: GenericObject): string => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  if (typeof error === "object" && "message" in error) {
+    if (typeof error["message"] === "object") {
+      return JSON.stringify(error["message"]);
+    } else {
+      return String(error["message"]);
+    }
+  } else {
+    return JSON.stringify(error);
+  }
+};
+const processStackTrace = (stack: string): string[] => {
+  return stack
+    .split("\n")
+    .slice(1) // Remove first line (error message)
+    .map((line) =>
+      line
+        .trim()
+        .replace(/^at\s+/, "") // Remove 'at ' prefix
+        .replace(PROCESS_ROOT, "$ROOT"),
+    );
+};
+
+// Error serialization utility
 export const serializeError = (
   error: GenericObject,
   omitStack = false,
 ): GenericObject => {
-  const nodeError = error as NodeJS.ErrnoException;
-  const regularError = error as Error;
-  const tag = (nodeError.code ?? regularError.name) || "Error";
+  const tag = getErrorTag(error);
+  const message = getErrorMessage(error);
   const serialized: GenericObject = {
-    message: `[${tag}] ${regularError.message}`,
+    message: `[${tag}] ${message}`,
   };
   if (!omitStack) {
-    const stack = regularError.stack ?? "";
-    serialized["stack"] = stack
-      .split("\n")
-      .slice(1) // Remove first line (error message)
-      .map(
-        (line) =>
-          line
-            .trim()
-            .replace(/^at\s+/, "") // Remove "at" prefix
-            .replace(PROCESS_ROOT, "$ROOT"), // Replace absolute path with placeholder
-      );
+    const stack = (error as ComboError).stack ?? "";
+    serialized["stack"] = processStackTrace(stack);
   }
   // Add additional properties from the original error
   addAdditionalProperties(serialized, error);

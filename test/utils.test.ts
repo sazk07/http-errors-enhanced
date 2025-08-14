@@ -23,7 +23,6 @@ function verifySerialization(
       if (k === "stack") {
         const firstElemOfActualStack = actualStack[0] ?? "";
         const firstElemOfExpectedStack = expectedStack[0] ?? [];
-        // compare actualStack[0] with v
         assert(
           firstElemOfActualStack.match(firstElemOfExpectedStack as RegExp),
         );

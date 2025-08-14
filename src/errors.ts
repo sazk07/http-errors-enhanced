@@ -1,5 +1,5 @@
 import { HttpError } from "./base.js";
-import { type GenericObject } from "./utils.js";
+import { type GenericObject } from "./types.js";
 
 export class BadRequestError extends HttpError {
   static status = 400;
