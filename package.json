@@ -1,25 +1,32 @@
 {
-  "name": "http-errors-enhanced",
-  "version": "0.0.1",
+  "name": "@sazk/http-errors-enhanced",
+  "version": "0.1.0",
   "description": "Create HTTP errors with additional properties for any framework.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sazk07/http-errors-enhanced.git"
+    "url": "https://github.com/sazk07/http-errors-enhanced.git"
   },
   "keywords": [
     "http",
     "errors",
     "enhanced",
-    "http-errors"
+    "http-errors",
+    "typescript",
+    "middleware",
+    "nodejs"
   ],
   "bugs": {
     "url": "https://github.com/sazk07/http-errors-enhanced/issues"
   },
   "author": "Shahan Arshad Khan",
   "contributors": [
-    "Shogun shogun@cowtech.it"
+    "Shogun shogun@cowtech.it (original author)"
   ],
+  "homepage": "https://github.com/sazk07/http-errors-enhanced#readme",
   "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
   "private": false,
   "files": [
     "dist",
@@ -28,7 +35,14 @@
     "README.md"
   ],
   "type": "module",
-  "exports": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "tsx --watch src/index.ts",
