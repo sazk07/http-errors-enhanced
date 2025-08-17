@@ -1,18 +1,23 @@
 {
   "extends": "./configs/tsbase",
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2022",
+    "lib": ["ES2022"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "jsx": "preserve",
     "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "rootDir": "src",
     "outDir": "dist"
   },
   "include": [
-    "src/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "test"
   ]
 }

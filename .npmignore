@@ -1,0 +1,10 @@
+src/
+test/
+tests/
+*.test.*
+*.spec.*
+.eslintrc.*
+tsconfig.json
+.github/
+.vscode/
+coverage/

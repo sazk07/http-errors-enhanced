@@ -234,6 +234,9 @@ This project is a fork of [http-errors-enhanced](https://github.com/ShogunPanda/
 
 ## Copyright
 
-Copyright (C) 2020 and above Shogun (shogun@cowtech.it).
+Copyright (C) 2025, and above [Shahan Arshad Khan](https://github.com/sazk07)
+
+This project is a fork of [http-errors-enhanced](https://github.com/ShogunPanda/http-errors-enhanced) by [Shogun](https://github.com/ShogunPanda).
+Original work copyright (c) 2020, and above Shogun (shogun@cowtech.it).
 
 Licensed under the ISC license, which can be found at https://choosealicense.com/licenses/isc.
