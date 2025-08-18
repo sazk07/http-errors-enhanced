@@ -7,8 +7,6 @@
 
 Create HTTP errors with additional properties for any framework.
 
-http://sw.cowtech.it/http-errors-enhanced
-
 ## Installation
 
 Just run:
