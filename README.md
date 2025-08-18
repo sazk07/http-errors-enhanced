@@ -12,7 +12,7 @@ Create HTTP errors with additional properties for any framework.
 Just run:
 
 ```bash
-npm install http-errors-enhanced --save
+npm install @sazk/http-errors-enhanced
 ```
 
 ## Usage
