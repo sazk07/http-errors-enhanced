@@ -1,8 +1,4 @@
-import {
-  type ComboError,
-  type GenericObject,
-  isNodeError,
-} from "./types.js";
+import { type ComboError, type GenericObject, isNodeError } from "./types.js";
 
 // Constants
 const PROCESS_ROOT = process.cwd();

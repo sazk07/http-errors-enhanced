@@ -121,9 +121,7 @@ void test("createError", async () => {
 void test("isHttpError", async () => {
   await test("it should correctly detect HTTP error duck typing", () => {
     assert(isHttpError(createError(404, "WHATEVER", { key1: "value1" })));
-    assert(
-      isHttpError(createHttpError(404, "WHATEVER", { key1: "value1" })),
-    );
+    assert(isHttpError(createHttpError(404, "WHATEVER", { key1: "value1" })));
     assert(isHttpError(new createHttpError.NotFound("WHATEVER")));
     assert(isHttpError({ status: 404, statusCode: 404, expose: true }));
     assert(!isHttpError(null));
@@ -132,8 +130,6 @@ void test("isHttpError", async () => {
     assert(!isHttpError(123));
     assert(!isHttpError({}));
     assert(!isHttpError({ status: 404, statusCode: 405, expose: true }));
-    assert(
-      !isHttpError({ status: 404, statusCode: 404, expose: "WHATEVER" }),
-    );
+    assert(!isHttpError({ status: 404, statusCode: 404, expose: "WHATEVER" }));
   });
 });

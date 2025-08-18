@@ -5,8 +5,8 @@ import {
   lowerCaseFirstChar,
   pascalCase,
   upperCaseFirstChar,
-  type GenericObject,
 } from "../src/utils.js";
+import type { GenericObject } from "../src/index.js";
 
 function verifySerialization(
   actual: GenericObject,

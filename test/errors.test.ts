@@ -910,7 +910,10 @@ test("NetworkAuthenticationRequiredError", () => {
   assert.deepStrictEqual(error.message, "WHATEVER");
   assert.deepStrictEqual(error.error, "Network Authentication Required");
   assert.deepStrictEqual(error.errorPhrase, "Network authentication required.");
-  assert.deepStrictEqual(error.code, "HTTP_ERROR_NETWORK_AUTHENTICATION_REQUIRED");
+  assert.deepStrictEqual(
+    error.code,
+    "HTTP_ERROR_NETWORK_AUTHENTICATION_REQUIRED",
+  );
   assert.deepStrictEqual(error.name, "NetworkAuthenticationRequiredError");
   assert(!error.isClientError);
   assert(error.isServerError);
